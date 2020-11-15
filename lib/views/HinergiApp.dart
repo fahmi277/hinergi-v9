@@ -76,11 +76,16 @@ class _HinergiAppState extends State<HinergiApp> {
                           bottom: ScreenUtil().setHeight(10),
                           left: ScreenUtil().setWidth(10),
                           right: ScreenUtil().setWidth(10)),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Image.asset(
-                          'lib/assets/icons/settings.png',
-                          scale: 10,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/setting');
+                            },
+                                              child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.asset(
+                            'lib/assets/icons/settings.png',
+                            scale: 10,
+                          ),
                         ),
                       ),
                     ),

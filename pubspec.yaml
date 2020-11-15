@@ -32,6 +32,11 @@ dependencies:
   google_fonts: ^1.1.0
   flutter_screenutil: ^3.1.0
   syncfusion_flutter_gauges: ^18.3.38
+  fluttertoast: ^7.1.1
+  shared_preferences: ^0.5.1+2
+  validators: ^2.0.0+1
+  barcode_scan: ^2.0.1
+  qr_code_scanner: ^0.0.12
   dio:
   intl: ^0.16.1
 
@@ -51,11 +56,12 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+    
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
   assets:
+  - lib/assets/images/
   - lib/assets/icons/logohinergi.jpg
   - lib/assets/icons/settings.png
   - lib/assets/icons/light.png

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+// import 'package:hinergi_v9/loadScreen.dart';
+import 'package:hinergi_v9/login/view/loginPage.dart';
+import 'package:hinergi_v9/login/view/loginPage.dart';
 
 void main() {
-  runApp(MyApp());
-}
+  runApp(loginPage());
+  }
+  
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

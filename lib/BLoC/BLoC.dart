@@ -42,7 +42,7 @@ class BlynkBLoc {
 
   void timerBlynk(String data) {
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) async {
-      var dataBlynk = await ApiServices().getBlynkData();
+      var dataBlynk = await ApiServices().getBlynkData("/get/V2");
       _stateSinkBlynk.add(dataBlynk);
     });
   }

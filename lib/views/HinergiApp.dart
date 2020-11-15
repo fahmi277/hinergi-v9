@@ -8,6 +8,7 @@ import 'package:hinergi_v9/BLoC/BLoC.dart';
 
 import 'package:hinergi_v9/resources/String.dart';
 import 'package:hinergi_v9/services/ApiServices.dart';
+import 'package:hinergi_v9/services/DateTimeServices.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class HinergiApp extends StatefulWidget {
@@ -20,13 +21,6 @@ class _HinergiAppState extends State<HinergiApp> {
   BlynkBLoc blynkBloc = BlynkBLoc();
   Timer timer;
   double kwhRealtime = 0.00;
-
-  void timerBlynk() {
-    timer = Timer.periodic(Duration(seconds: 5), (Timer t) async {
-      var dataBlynk = await ApiServices().getBlynkData();
-      blynkBloc.eventSinkBlynk.add(dataBlynk.toString());
-    });
-  }
 
   @override
   void dispose() {
@@ -200,73 +194,101 @@ class _HinergiAppState extends State<HinergiApp> {
                           child: Container(
                               height: ScreenUtil().setHeight(600),
                               width: ScreenUtil().setWidth(600),
-                              child: SfRadialGauge(axes: <RadialAxis>[
-                                RadialAxis(
-                                    axisLabelStyle:
-                                        GaugeTextStyle(color: Colors.white),
-                                    minimum: 0,
-                                    maximum: 150 * 10.0,
-                                    startAngle: 120,
-                                    endAngle: 0,
-                                    ranges: <GaugeRange>[
-                                      GaugeRange(
-                                          startValue: 0 * 10.0,
-                                          endValue: 50 * 10.0,
-                                          color: Colors.cyanAccent,
-                                          startWidth: 10,
-                                          endWidth: 10),
-                                      GaugeRange(
-                                          startValue: 50 * 10.0,
-                                          endValue: 100 * 10.0,
-                                          color: Colors.orange,
-                                          startWidth: 10,
-                                          endWidth: 10),
-                                      GaugeRange(
-                                          startValue: 100 * 10.0,
-                                          endValue: 150 * 10.0,
-                                          color: Colors.red,
-                                          startWidth: 10,
-                                          endWidth: 10)
-                                    ],
-                                    pointers: <GaugePointer>[
-                                      NeedlePointer(value: kwhRealtime)
-                                    ],
-                                    annotations: <GaugeAnnotation>[
-                                      GaugeAnnotation(
-                                          widget: Padding(
-                                            padding: EdgeInsets.only(
-                                              top: ScreenUtil().setHeight(270),
-                                              left: ScreenUtil().setWidth(100),
-                                            ),
-                                            child: Container(
-                                                child: Column(
-                                              children: [
-                                                Text(
-                                                    kwhRealtime.toStringAsFixed(
-                                                            1) +
-                                                        " W",
-                                                    style: GoogleFonts.poppins(
-                                                        color: Colors.white,
-                                                        fontSize: ScreenUtil()
-                                                            .setSp(AllString()
+                              child: SfRadialGauge(
+                                  enableLoadingAnimation: true,
+                                  animationDuration: 6000,
+                                  axes: <RadialAxis>[
+                                    RadialAxis(
+                                        axisLabelStyle:
+                                            GaugeTextStyle(color: Colors.white),
+                                        minimum: 0,
+                                        maximum: 150 * 10.0,
+                                        startAngle: 120,
+                                        endAngle: -20,
+                                        pointers: <GaugePointer>[
+                                          RangePointer(
+                                              color:
+                                                  Colors.lightGreenAccent[400],
+                                              value: kwhRealtime,
+                                              cornerStyle:
+                                                  CornerStyle.bothCurve),
+                                          // NeedlePointer(value: kwhRealtime)
+                                        ],
+                                        annotations: <GaugeAnnotation>[
+                                          GaugeAnnotation(
+                                              widget: Stack(
+                                                children: [
+                                                  Center(
+                                                      child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                      bottom: ScreenUtil()
+                                                          .setHeight(150),
+                                                    ),
+                                                    child: Container(
+                                                      height: 50,
+                                                      width: 120,
+                                                      // color: Colors.red,
+                                                      child: Card(
+                                                        child: Center(
+                                                          child: Text(
+                                                              "Connected",
+                                                              style: GoogleFonts.poppins(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          68,
+                                                                          204,
+                                                                          112),
+                                                                  fontSize:
+                                                                      ScreenUtil()
+                                                                          .setSp(
+                                                                              30))),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                      top: ScreenUtil()
+                                                          .setHeight(320),
+                                                      left: ScreenUtil()
+                                                          .setWidth(250),
+                                                    ),
+                                                    child: Container(
+                                                        child: Column(
+                                                      children: [
+                                                        Text(
+                                                            kwhRealtime
+                                                                    .toStringAsFixed(
+                                                                        1) +
+                                                                " W",
+                                                            style: GoogleFonts.poppins(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: ScreenUtil()
+                                                                    .setSp(AllString()
+                                                                            .dummyKwhStatus[
+                                                                        "size"]))),
+                                                        Text(
+                                                            AllString()
                                                                     .dummyKwhStatus[
-                                                                "size"]))),
-                                                Text(
-                                                    AllString().dummyKwhStatus[
-                                                        "title"],
-                                                    style: GoogleFonts.poppins(
-                                                        color: Colors.white,
-                                                        fontSize: ScreenUtil()
-                                                            .setSp(AllString()
-                                                                    .dummyKwhStatus[
-                                                                "size"]))),
-                                              ],
-                                            )),
-                                          ),
-                                          angle: 40,
-                                          positionFactor: 0.5)
-                                    ])
-                              ]))),
+                                                                "title"],
+                                                            style: GoogleFonts.poppins(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: ScreenUtil()
+                                                                    .setSp(AllString()
+                                                                            .dummyKwhStatus[
+                                                                        "size"]))),
+                                                      ],
+                                                    )),
+                                                  ),
+                                                ],
+                                              ),
+                                              angle: 40,
+                                              positionFactor: 0.2)
+                                        ])
+                                  ]))),
                     );
                   }),
               Column(
@@ -288,6 +310,7 @@ class _HinergiAppState extends State<HinergiApp> {
                             },
                             child: Card(
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text("Save",
                                       style: GoogleFonts.poppins(
@@ -344,8 +367,6 @@ class _HinergiAppState extends State<HinergiApp> {
                         InkWell(
                           onTap: () {
                             print("object");
-                            ApiServices().getBlynkData();
-                            blynkBloc.eventSinkBlynk.add("fahmi");
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
@@ -362,7 +383,7 @@ class _HinergiAppState extends State<HinergiApp> {
                                     color: Colors.white,
                                     fontSize: ScreenUtil()
                                         .setSp(AllString().subjudul["size"]))),
-                            Text("15.11.2020",
+                            Text(DateTimeClass().getTimeNow()["tanggal"],
                                 style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontSize: ScreenUtil()

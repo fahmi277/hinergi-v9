@@ -13,6 +13,7 @@ class _loadScreenState extends State<loadScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      // debugShowMaterialGrid: true,
       home: Scaffold(
         // body: MyApp(),
         body: LoginPage(),

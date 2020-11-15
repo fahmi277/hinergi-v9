@@ -35,6 +35,7 @@ class MyTextFormField extends StatelessWidget {
           left: ScreenUtil().setWidth(50),
           right: ScreenUtil().setWidth(50)),
       child: TextFormField(
+        controller:_controller,
         maxLength: maxLength,
         validator: validator,
         autofocus: true,

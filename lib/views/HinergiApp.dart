@@ -233,7 +233,7 @@ class _HinergiAppState extends State<HinergiApp> {
                                           RangePointer(
                                               enableAnimation: true,
                                               color: Colors.red,
-                                              value: kwhRealtime + 1000.0,
+                                              value: kwhRealtime,
                                               cornerStyle:
                                                   CornerStyle.bothCurve),
                                           // NeedlePointer(value: kwhRealtime)
@@ -395,6 +395,8 @@ class _HinergiAppState extends State<HinergiApp> {
                       children: [
                         InkWell(
                           onTap: () {
+                            String data = "123,456,789";
+                            print(data.split(",")[1]);
                             print("object");
                             ApiServices().getThinkspeakData();
                           },

@@ -39,7 +39,7 @@ class ApiServices {
     var dio = Dio();
     try {
       Response response = await dio.get(link);
-      print(response);
+      // print(response);
       return response.toString().split("[")[1].split("]")[0];
     } catch (e) {
       print("null");

@@ -9,4 +9,10 @@ class AllString {
 
   Map dummyKwh = {"title": "400.3 W", "size": 50};
   Map dummyKwhStatus = {"title": "Carry Limit", "size": 50};
+
+  Map realtimeStatus = {
+    "green": "Carry Limit",
+    "amber": "Safety Limit",
+    "red": "Upper Limit",
+  };
 }

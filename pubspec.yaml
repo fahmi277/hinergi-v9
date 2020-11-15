@@ -32,6 +32,7 @@ dependencies:
   google_fonts: ^1.1.0
   flutter_screenutil: ^3.1.0
   syncfusion_flutter_gauges: ^18.3.38
+  dio:
 
 dev_dependencies:
   flutter_test:

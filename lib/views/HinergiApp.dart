@@ -138,11 +138,11 @@ class _HinergiAppState extends State<HinergiApp> {
                 child: Center(
                   child: Container(
                     height: ScreenUtil().setHeight(120),
-                    // width: 200,
+                    width: ScreenUtil().setWidth(650),
                     child: Card(
                       color: Colors.lightGreenAccent[500],
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: BorderRadius.circular(40.0),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -170,12 +170,36 @@ class _HinergiAppState extends State<HinergiApp> {
                             ),
                           )),
                           Center(
-                            child: Text(AllString().mode["title2"],
-                                style: GoogleFonts.poppins(
-                                    color: Color.fromARGB(255, 68, 204, 112),
-                                    fontSize: ScreenUtil()
-                                        .setSp(AllString().subjudul["size"]))),
-                          )
+                              child: Card(
+                            // color: Color.fromARGB(255, 68, 204, 112),
+                            shape: StadiumBorder(
+                              side: BorderSide(
+                                // color: Color.fromARGB(255, 68, 204, 112),
+                                color: Colors.white,
+                                width: 4.0,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: ScreenUtil().setWidth(50),
+                                  right: ScreenUtil().setWidth(50),
+                                  top: ScreenUtil().setWidth(10),
+                                  bottom: ScreenUtil().setWidth(10)),
+                              child: Text(AllString().mode["title2"],
+                                  style: GoogleFonts.poppins(
+                                      color: Color.fromARGB(255, 68, 204, 112),
+                                      fontSize: ScreenUtil()
+                                          .setSp(AllString().judul["size"]))),
+                            ),
+                          ))
+                          // Center(
+
+                          //   child: Text(AllString().mode["title2"],
+                          //       style: GoogleFonts.poppins(
+                          //           color: Color.fromARGB(255, 68, 204, 112),
+                          //           fontSize: ScreenUtil()
+                          //               .setSp(AllString().subjudul["size"]))),
+                          // )
                         ],
                       ),
                     ),
@@ -207,9 +231,9 @@ class _HinergiAppState extends State<HinergiApp> {
                                         endAngle: -20,
                                         pointers: <GaugePointer>[
                                           RangePointer(
-                                              color:
-                                                  Colors.lightGreenAccent[400],
-                                              value: kwhRealtime,
+                                              enableAnimation: true,
+                                              color: Colors.red,
+                                              value: kwhRealtime + 1000.0,
                                               cornerStyle:
                                                   CornerStyle.bothCurve),
                                           // NeedlePointer(value: kwhRealtime)
@@ -233,6 +257,9 @@ class _HinergiAppState extends State<HinergiApp> {
                                                           child: Text(
                                                               "Connected",
                                                               style: GoogleFonts.poppins(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                   color: Color
                                                                       .fromARGB(
                                                                           255,
@@ -278,8 +305,8 @@ class _HinergiAppState extends State<HinergiApp> {
                                                                     .white,
                                                                 fontSize: ScreenUtil()
                                                                     .setSp(AllString()
-                                                                            .dummyKwhStatus[
-                                                                        "size"]))),
+                                                                            .dummyKwhStatus["size"] -
+                                                                        20))),
                                                       ],
                                                     )),
                                                   ),
@@ -314,6 +341,7 @@ class _HinergiAppState extends State<HinergiApp> {
                                 children: [
                                   Text("Save",
                                       style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.bold,
                                           color:
                                               Color.fromARGB(255, 68, 204, 112),
                                           fontSize: ScreenUtil().setSp(
@@ -331,9 +359,10 @@ class _HinergiAppState extends State<HinergiApp> {
                                                   color: Color.fromARGB(
                                                       255, 68, 204, 112),
                                                   fontSize:
-                                                      ScreenUtil().setSp(40)))),
+                                                      ScreenUtil().setSp(30)))),
                                       Text(AllString().footer["title"],
                                           style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.bold,
                                               color: Color.fromARGB(
                                                   255, 68, 204, 112),
                                               fontSize: ScreenUtil().setSp(
@@ -367,6 +396,7 @@ class _HinergiAppState extends State<HinergiApp> {
                         InkWell(
                           onTap: () {
                             print("object");
+                            ApiServices().getThinkspeakData();
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),

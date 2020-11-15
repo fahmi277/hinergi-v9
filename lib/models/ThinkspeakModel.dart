@@ -1,10 +1,10 @@
-class think {
+class Thinkspeak {
   Channel channel;
   List<Feeds> feeds;
 
-  think({this.channel, this.feeds});
+  Thinkspeak({this.channel, this.feeds});
 
-  think.fromJson(Map<String, dynamic> json) {
+  Thinkspeak.fromJson(Map<String, dynamic> json) {
     channel =
         json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
     if (json['feeds'] != null) {

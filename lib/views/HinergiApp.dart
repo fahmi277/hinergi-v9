@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hinergi_v9/BLoC/BLoC.dart';
+import 'package:hinergi_v9/model/setting.dart';
 
 import 'package:hinergi_v9/resources/String.dart';
 import 'package:hinergi_v9/services/ApiServices.dart';
@@ -22,10 +24,24 @@ class _HinergiAppState extends State<HinergiApp> {
   Timer timer;
   double kwhRealtime = 0.00;
 
+  var textColorHardware = Color.fromARGB(255, 68, 204, 112);
+  String statusHardware = "false";
+
+// get setting
+
+  Setting setting = Setting();
+// get setting
+  Future<void> getApi() async {
+    var data = await setting.getApiId();
+
+    print(data.apiKey);
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+
     blynkBloc.dispose();
   }
 
@@ -33,8 +49,10 @@ class _HinergiAppState extends State<HinergiApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     // timerBlynk();
-    blynkBloc.timerBlynk("data");
+    getApi();
+    blynkBloc.timerBlynk({0: 1, 1: 1});
   }
 
   @override
@@ -49,18 +67,19 @@ class _HinergiAppState extends State<HinergiApp> {
             children: [
               Container(
                 // color: Color.fromARGB(255, 68, 204, 112),
-                 decoration: BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
-                    end:
-                        Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
+                    end: Alignment
+                        .bottomCenter, // 10% of the width, so there are ten blinds.
                     colors: [
                       // const Color.fromARGB(255,55, 65, 161),
-                      const Color.fromARGB(255,55, 65, 161),
+                      const Color.fromARGB(255, 55, 65, 161),
                       // const Color.fromARGB(255, 68, 2014, 112)
-                      const Color.fromARGB(255,38, 110, 80),
+                      const Color.fromARGB(255, 38, 110, 80),
                     ], // red to yellow
-                    tileMode: TileMode.repeated, // repeats the gradient over the canvas
+                    tileMode: TileMode
+                        .repeated, // repeats the gradient over the canvas
                   ),
                 ),
                 // color: Colors.blue,
@@ -90,11 +109,11 @@ class _HinergiAppState extends State<HinergiApp> {
                           bottom: ScreenUtil().setHeight(10),
                           left: ScreenUtil().setWidth(10),
                           right: ScreenUtil().setWidth(10)),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/setting');
-                            },
-                                              child: ClipRRect(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/setting');
+                        },
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(20.0),
                           child: Image.asset(
                             'lib/assets/icons/settings.png',
@@ -190,33 +209,32 @@ class _HinergiAppState extends State<HinergiApp> {
                           )),
                           Center(
                               child: InkWell(
-                                onTap: (){
-                                  Navigator.pushNamed(context, '/history');
-                                },
-                                child: Card(
-                                  // color: Color.fromARGB(255, 68, 204, 112),
-                                  shape: StadiumBorder(
-                                    side: BorderSide(
-                                      // color: Color.fromARGB(255, 68, 204, 112),
-                                      color: Colors.white,
-                                      width: 4.0,
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/history');
+                                  },
+                                  child: Card(
+                                    // color: Color.fromARGB(255, 68, 204, 112),
+                                    shape: StadiumBorder(
+                                      side: BorderSide(
+                                        // color: Color.fromARGB(255, 68, 204, 112),
+                                        color: Colors.white,
+                                        width: 4.0,
+                                      ),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(50),
-                                        right: ScreenUtil().setWidth(50),
-                                        top: ScreenUtil().setWidth(10),
-                                        bottom: ScreenUtil().setWidth(10)),
-                                    child: Text(AllString().mode["title2"],
-                                        style: GoogleFonts.poppins(
-                                            color: Color.fromARGB(255, 68, 204, 112),
-                                            fontSize: ScreenUtil()
-                                                .setSp(AllString().judul["size"]))),
-                                  ),
-                                )
-                              ) 
-                            )
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: ScreenUtil().setWidth(50),
+                                          right: ScreenUtil().setWidth(50),
+                                          top: ScreenUtil().setWidth(10),
+                                          bottom: ScreenUtil().setWidth(10)),
+                                      child: Text(AllString().mode["title2"],
+                                          style: GoogleFonts.poppins(
+                                              color: Color.fromARGB(
+                                                  255, 68, 204, 112),
+                                              fontSize: ScreenUtil().setSp(
+                                                  AllString().judul["size"]))),
+                                    ),
+                                  )))
                           // Center(
 
                           //   child: Text(AllString().mode["title2"],
@@ -234,9 +252,34 @@ class _HinergiAppState extends State<HinergiApp> {
 
               StreamBuilder(
                   stream: blynkBloc.stateStreamBlynk,
-                  initialData: "0.00",
+                  initialData: {
+                    0: [0.00],
+                    1: false
+                  },
                   builder: (context, snapshot) {
-                    kwhRealtime = double.parse(snapshot.data);
+                    // kwhRealtime = double.parse(snapshot.data);
+                    // print(snapshot.data);
+                    var dataApi = snapshot.data;
+
+                    statusHardware = dataApi[1].toString();
+                    var dataKwh =
+                        dataApi.toString().split("[")[1].split("]")[0];
+                    String textHardware = "Disconnect";
+                    String kwhStatus = "Carry Limit";
+
+                    if (statusHardware == "true") {
+                      textColorHardware = Color.fromARGB(255, 68, 204, 112);
+                      textHardware = "Connect";
+                      kwhRealtime = double.parse(dataKwh);
+                      dataKwh = kwhRealtime.toStringAsFixed(1) + " W";
+                    } else {
+                      textColorHardware = Colors.red;
+                      textHardware = "Disconnect";
+                      kwhRealtime = 0.00;
+                      dataKwh = "";
+                      kwhStatus = "";
+                    }
+
                     return Padding(
                       padding: EdgeInsets.only(top: 0.20.sh),
                       child: Center(
@@ -280,17 +323,13 @@ class _HinergiAppState extends State<HinergiApp> {
                                                       child: Card(
                                                         child: Center(
                                                           child: Text(
-                                                              "Connected",
+                                                              textHardware,
                                                               style: GoogleFonts.poppins(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          68,
-                                                                          204,
-                                                                          112),
+                                                                  color:
+                                                                      textColorHardware,
                                                                   fontSize:
                                                                       ScreenUtil()
                                                                           .setSp(
@@ -309,11 +348,7 @@ class _HinergiAppState extends State<HinergiApp> {
                                                     child: Container(
                                                         child: Column(
                                                       children: [
-                                                        Text(
-                                                            kwhRealtime
-                                                                    .toStringAsFixed(
-                                                                        1) +
-                                                                " W",
+                                                        Text(dataKwh,
                                                             style: GoogleFonts.poppins(
                                                                 color: Colors
                                                                     .white,
@@ -321,10 +356,7 @@ class _HinergiAppState extends State<HinergiApp> {
                                                                     .setSp(AllString()
                                                                             .dummyKwhStatus[
                                                                         "size"]))),
-                                                        Text(
-                                                            AllString()
-                                                                    .dummyKwhStatus[
-                                                                "title"],
+                                                        Text(kwhStatus,
                                                             style: GoogleFonts.poppins(
                                                                 color: Colors
                                                                     .white,

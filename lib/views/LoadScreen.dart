@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hinergi_v9/login/view/LoginPage.dart';
 import 'package:hinergi_v9/setting/view/SettingPage.dart';
 import 'package:hinergi_v9/views/HinergiApp.dart';
+import 'package:hinergi_v9/views/HistoryPage.dart';
 
 class loadScreen extends StatefulWidget {
   @override
@@ -23,7 +24,8 @@ class _loadScreenState extends State<loadScreen> {
       routes: <String, WidgetBuilder>{
         '/login' : (BuildContext context) => new LoginPage(),
         '/setting' : (BuildContext context) => new SettingPage(),
-        '/home' : (BuildContext context) => new HinergiApp()
+        '/home' : (BuildContext context) => new HinergiApp(),
+        '/history' : (BuildContext context) => new HistoryPage()
       },
     );
   }

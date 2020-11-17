@@ -64,6 +64,7 @@ class Setting {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('channelId');
     prefs.remove('apiKey');
+    prefs.remove('token');
   }
 
   Future<Setting> getApiId() async {

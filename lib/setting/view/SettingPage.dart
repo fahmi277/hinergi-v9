@@ -35,7 +35,7 @@ class SettingPage extends StatelessWidget {
                                 children: <Widget>[
                                   AppBar(
                                     title: Text('Pengaturan'),
-                                    backgroundColor : Color.fromARGB(255, 4, 117, 116),
+                                    backgroundColor : Color.fromARGB(255,55, 65, 161),
                                     actions: <Widget>[
                                       IconButton(
                                         icon: Icon(

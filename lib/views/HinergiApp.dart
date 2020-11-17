@@ -48,7 +48,21 @@ class _HinergiAppState extends State<HinergiApp> {
           child: Stack(
             children: [
               Container(
-                color: Color.fromARGB(255, 68, 204, 112),
+                // color: Color.fromARGB(255, 68, 204, 112),
+                 decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end:
+                        Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
+                    colors: [
+                      // const Color.fromARGB(255,55, 65, 161),
+                      const Color.fromARGB(255,55, 65, 161),
+                      // const Color.fromARGB(255, 68, 2014, 112)
+                      const Color.fromARGB(255,38, 110, 80),
+                    ], // red to yellow
+                    tileMode: TileMode.repeated, // repeats the gradient over the canvas
+                  ),
+                ),
                 // color: Colors.blue,
               ),
               Padding(
@@ -175,28 +189,34 @@ class _HinergiAppState extends State<HinergiApp> {
                             ),
                           )),
                           Center(
-                              child: Card(
-                            // color: Color.fromARGB(255, 68, 204, 112),
-                            shape: StadiumBorder(
-                              side: BorderSide(
-                                // color: Color.fromARGB(255, 68, 204, 112),
-                                color: Colors.white,
-                                width: 4.0,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: ScreenUtil().setWidth(50),
-                                  right: ScreenUtil().setWidth(50),
-                                  top: ScreenUtil().setWidth(10),
-                                  bottom: ScreenUtil().setWidth(10)),
-                              child: Text(AllString().mode["title2"],
-                                  style: GoogleFonts.poppins(
-                                      color: Color.fromARGB(255, 68, 204, 112),
-                                      fontSize: ScreenUtil()
-                                          .setSp(AllString().judul["size"]))),
-                            ),
-                          ))
+                              child: InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context, '/history');
+                                },
+                                child: Card(
+                                  // color: Color.fromARGB(255, 68, 204, 112),
+                                  shape: StadiumBorder(
+                                    side: BorderSide(
+                                      // color: Color.fromARGB(255, 68, 204, 112),
+                                      color: Colors.white,
+                                      width: 4.0,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: ScreenUtil().setWidth(50),
+                                        right: ScreenUtil().setWidth(50),
+                                        top: ScreenUtil().setWidth(10),
+                                        bottom: ScreenUtil().setWidth(10)),
+                                    child: Text(AllString().mode["title2"],
+                                        style: GoogleFonts.poppins(
+                                            color: Color.fromARGB(255, 68, 204, 112),
+                                            fontSize: ScreenUtil()
+                                                .setSp(AllString().judul["size"]))),
+                                  ),
+                                )
+                              ) 
+                            )
                           // Center(
 
                           //   child: Text(AllString().mode["title2"],

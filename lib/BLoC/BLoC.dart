@@ -14,21 +14,21 @@ class BlynkBLoc {
   // event tombol
   StreamController<ColorEvent> _eventController =
       StreamController<ColorEvent>();
-  StreamController<String> _eventControllerBlynk = StreamController<String>();
+  StreamController<Map> _eventControllerBlynk = StreamController<Map>();
 
   StreamSink<ColorEvent> get eventSink => _eventController.sink;
-  StreamSink<String> get eventSinkBlynk => _eventControllerBlynk.sink;
+  StreamSink<Map> get eventSinkBlynk => _eventControllerBlynk.sink;
   // event tombol
   StreamController<Color> _stateController = StreamController<Color>();
-  StreamController<String> _stateControllerBlynk = StreamController<String>();
+  StreamController<Map> _stateControllerBlynk = StreamController<Map>();
 
   StreamSink<Color> get _stateSink => _stateController.sink;
 
   Stream<Color> get stateStream => _stateController.stream;
 
-  StreamSink<String> get _stateSinkBlynk => _stateControllerBlynk.sink;
+  StreamSink<Map> get _stateSinkBlynk => _stateControllerBlynk.sink;
 
-  Stream<String> get stateStreamBlynk => _stateControllerBlynk.stream;
+  Stream<Map> get stateStreamBlynk => _stateControllerBlynk.stream;
 
   void _mapEventToState(ColorEvent colorEvent) {
     if (colorEvent == ColorEvent.to_amber) {
@@ -40,16 +40,17 @@ class BlynkBLoc {
     _stateSink.add(_color);
   }
 
-  void timerBlynk(String data) {
+  void timerBlynk(Map data) {
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) async {
       var dataBlynk = await ApiServices().getBlynkData("/get/V2");
       _stateSinkBlynk.add(dataBlynk);
+      // print(dataBlynk);
     });
   }
 
-  void changeApi(String data) {
+  void changeApi(Map data) {
     _stateSinkBlynk.add(data);
-    print(data);
+    // print(data);
   }
 
   // BlynkBLoc() {

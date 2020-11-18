@@ -2,6 +2,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hinergi_v9/model/setting.dart';
+import 'package:hinergi_v9/services/ApiServices.dart';
 import 'package:hinergi_v9/setting/model/MyTextFormField.dart';
 import 'package:hinergi_v9/views/HistoryPage.dart';
 // import 'package:hinergi_kwh/view/buttonDate.dart';
@@ -14,6 +15,7 @@ class SettingPage extends StatefulWidget {
   @override
   _SettingPage createState() => _SettingPage();
 }
+
 class _SettingPage extends State<SettingPage> {
   Setting setting = Setting();
   Setting seter = Setting();
@@ -44,7 +46,7 @@ class _SettingPage extends State<SettingPage> {
       future: seter.getSetting(),
       builder: (context, AsyncSnapshot<Setting> snapshot) {
         if (snapshot.hasData) {
-          if(chanelId == "" || apiKey == "" || token == ""){
+          if (chanelId == "" || apiKey == "" || token == "") {
             chanelId = snapshot.data.channelId.toString();
             apiKey = snapshot.data.apiKey.toString();
             token = snapshot.data.token.toString();
@@ -204,95 +206,92 @@ class _SettingPage extends State<SettingPage> {
                         ),
                         Container(
                             // alignment: Alignment.topRight,
-                          child: Column(
-                            children:[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                    width: double.infinity,
-                                    // minWidth: 200.0,
-                                    height: 50.0,
-                                    child: RaisedButton(
-                                      // color: Colors.blueAccent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25.0),
-                                        side: BorderSide(color: Color.fromARGB(255,0,176,41))
-                                        // side: BorderSide(color: Colors.red)
-                                      ),
-                                      color: Colors.white,
-                                       onPressed: () async {
-                                                  try {
-                                                    String barcode = await BarcodeScanner.scan();
-                                                    setState(() {
-                                                      // String coba = '1154780,SPZVVOM0D4YO6TX0,horeksdfklj';
-                                                      // print(coba.split(',')[0]);
-                                                      // this.barcode = barcode;
-                                                      chanelId = barcode.split(',')[0];
-                                                      apiKey = barcode.split(',')[1];
-                                                      token = barcode.split(',')[2];
-                                                      this.barcode = snapshot.data.channelId;
-                                                     
-                                                    });
-                                                  } on PlatformException catch (error) {
-                                                    if (error.code == BarcodeScanner.CameraAccessDenied) {
-                                                      setState(() {
-                                                        this.barcode = 'Izin kamera tidak diizinkan oleh si pengguna';
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        this.barcode = 'Error: $error';
-                                                      });
-                                                    }
-                                                  }
-                                                },
-                                      child: Text(
-                                        'SCAN',
-                                        style: TextStyle(
-                                          color: Colors.black38,
-                                        ),
-                                      ),
-                                    )
-                                  )  
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                    width: double.infinity,
-                                    // minWidth: 200.0,
-                                    height: 50.0,
-                                    child: RaisedButton(
-                                      // color: Colors.blueAccent,
-                                      shape: RoundedRectangleBorder(
+                            child: Column(children: [
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  // minWidth: 200.0,
+                                  height: 50.0,
+                                  child: RaisedButton(
+                                    // color: Colors.blueAccent,
+                                    shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(25.0),
+                                        side: BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 0, 176, 41))
                                         // side: BorderSide(color: Colors.red)
-                                      ),
-                                      color: Color.fromARGB(255, 0, 176, 41),
-                                      onPressed: () {
-                                        if (_formKey.currentState.validate()) {
-                                          _formKey.currentState.save();
-
-                                          setting.setSetting(setting);
-                                          Navigator.pushNamed(context, '/home');
-                                        }
-                                      },
-                                      child: Text(
-                                        'SIMPAN',
-                                        style: TextStyle(
-                                          color: Colors.white,
                                         ),
+                                    color: Colors.white,
+                                    onPressed: () async {
+                                      try {
+                                        String barcode =
+                                            await BarcodeScanner.scan();
+                                        setState(() {
+                                          // String coba = '1154780,SPZVVOM0D4YO6TX0,horeksdfklj';
+                                          // print(coba.split(',')[0]);
+                                          // this.barcode = barcode;
+                                          chanelId = barcode.split(',')[0];
+                                          apiKey = barcode.split(',')[1];
+                                          token = barcode.split(',')[2];
+                                          this.barcode =
+                                              snapshot.data.channelId;
+                                        });
+                                      } on PlatformException catch (error) {
+                                        if (error.code ==
+                                            BarcodeScanner.CameraAccessDenied) {
+                                          setState(() {
+                                            this.barcode =
+                                                'Izin kamera tidak diizinkan oleh si pengguna';
+                                          });
+                                        } else {
+                                          setState(() {
+                                            this.barcode = 'Error: $error';
+                                          });
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                      'SCAN',
+                                      style: TextStyle(
+                                        color: Colors.black38,
                                       ),
-                                    )
-                                  )  
-                                )
-                            ]
-                          ) 
-                        ),
-                      ]
-                    )
-                  )
-                )
-              );
+                                    ),
+                                  ))),
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  // minWidth: 200.0,
+                                  height: 50.0,
+                                  child: RaisedButton(
+                                    // color: Colors.blueAccent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      // side: BorderSide(color: Colors.red)
+                                    ),
+                                    color: Color.fromARGB(255, 0, 176, 41),
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        _formKey.currentState.save();
+
+                                        
+
+                                        setting.setSetting(setting);
+                                        // ApiServices().getThinkspeakData();
+                                        Navigator.pushNamed(context, '/home');
+                                      }
+                                    },
+                                    child: Text(
+                                      'SIMPAN',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )))
+                        ])),
+                      ]))));
         } else {
           return new Scaffold(
               body: SingleChildScrollView(

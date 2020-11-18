@@ -189,7 +189,7 @@ class _HinergiAppState extends State<HinergiApp> {
                             FutureBuilder(
                                 future: getThinkspeakData(),
                                 builder: (context, snapshot) {
-                                  print("data thinks : " + snapshot.data);
+                                  // print("data thinks : " + snapshot.data);
                                   double kwhToday = double.parse(
                                       snapshot.data.toString().split(" ")[1]);
                                   double billingToday;
@@ -204,8 +204,8 @@ class _HinergiAppState extends State<HinergiApp> {
                                           double budgetHarian =
                                               data.budgetMax / 30;
                                           // double
-                                          print("object data");
-                                          print(data.tarifPerKwh);
+                                          // print("object data");
+                                          // print(data.tarifPerKwh);
                                           billingToday =
                                               data.tarifPerKwh * kwhToday;
                                         } else {}
@@ -443,7 +443,7 @@ class _HinergiAppState extends State<HinergiApp> {
                     child: FutureBuilder(
                         future: getThinkspeakData(),
                         builder: (context, snapshot) {
-                          print("data thinks : " + snapshot.data);
+                          // print("data thinks : " + snapshot.data);
                           double kwhToday = double.parse(
                               snapshot.data.toString().split(" ")[1]);
                           double billingToday;
@@ -455,8 +455,8 @@ class _HinergiAppState extends State<HinergiApp> {
                                 double budgetHarian =
                                     dataSetting.budgetMax / 30;
                                 // double
-                                print("object data");
-                                print(dataSetting.tarifPerKwh);
+                                // print("object data");
+                                // print(dataSetting.tarifPerKwh);
                                 billingToday =
                                     dataSetting.tarifPerKwh * kwhToday;
 

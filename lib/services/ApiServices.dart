@@ -41,20 +41,23 @@ class ApiServices {
     int i = 0;
 
     while (counterHistory < 5) {
-      i++;
       startDate = today.add(Duration(days: -i));
       endDate = startDate.add(Duration(days: 1));
       start = new DateFormat("yyyy-MM-dd").format(startDate);
       end = new DateFormat("yyyy-MM-dd").format(endDate);
       // print("$start == $end");
 
-      String link = "https://api.thingspeak.com/channels/1212044/feeds?end=" +
+      String link = "https://api.thingspeak.com/channels/" +
+          channelId +
+          "/feeds?end=" +
           end +
-          "&apikey=FVPTLLLSDHH8UUQE&start=" +
+          "&apikey=" +
+          apiKey +
+          "&start=" +
           start +
           "&timezone=Asia%2FJakarta&results=1140";
-
-      // print(link);
+      i++;
+      print(link);
       //"https://api.thingspeak.com/channels/1212044/feeds?end=2020-11-15&apikey=FVPTLLLSDHH8UUQE&start=2020-11-14&timezone=Asia%2FJakarta&results=1140";
 
       try {

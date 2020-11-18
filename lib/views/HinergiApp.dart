@@ -11,6 +11,7 @@ import 'package:hinergi_v9/model/setting.dart';
 import 'package:hinergi_v9/resources/String.dart';
 import 'package:hinergi_v9/services/ApiServices.dart';
 import 'package:hinergi_v9/services/DateTimeServices.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class HinergiApp extends StatefulWidget {
@@ -30,6 +31,8 @@ class _HinergiAppState extends State<HinergiApp> {
 // get setting
 
   Setting setting = Setting();
+  Setting ambilSetting = Setting();
+  String rupiah;
 // get setting
   Future<void> getApi() async {
     var data = await setting.getApiId();
@@ -37,8 +40,29 @@ class _HinergiAppState extends State<HinergiApp> {
     print(data.apiKey);
   }
 
+  getSetting() async {
+    var getSettingData = await ambilSetting.getSetting();
+    // print(getSettingData.);
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var data = prefs.getString("0");
+    // print("oke : " + data.toString());
+    return getSettingData;
+  }
+
+  getThinkspeakData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var data = prefs.getString("0");
+    return data;
+  }
+
   void getHistory() {
     ApiServices().getThinkspeakData();
+  }
+
+  void timer1() {
+    Timer timer = Timer.periodic(Duration(seconds: 5), (Timer _) async {
+      setState(() {});
+    });
   }
 
   @override
@@ -53,10 +77,11 @@ class _HinergiAppState extends State<HinergiApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    timer1();
     // timerBlynk();
     getHistory();
-    getApi();
+    // getApi();
+    // getSetting();
     blynkBloc.timerBlynk({0: 1, 1: 1});
   }
 
@@ -161,11 +186,39 @@ class _HinergiAppState extends State<HinergiApp> {
                                       color: Colors.white,
                                       fontSize: ScreenUtil().setSp(30))),
                             ),
-                            Text(AllString().billingrupiah["title"],
-                                style: GoogleFonts.poppins(
-                                    color: Colors.white,
-                                    fontSize: ScreenUtil().setSp(
-                                        AllString().billingrupiah["size"]))),
+                            FutureBuilder(
+                                future: getThinkspeakData(),
+                                builder: (context, snapshot) {
+                                  print("data thinks : " + snapshot.data);
+                                  double kwhToday = double.parse(
+                                      snapshot.data.toString().split(" ")[1]);
+                                  double billingToday;
+
+                                  return FutureBuilder(
+                                      future: getSetting(),
+                                      // stream: null,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          Setting data = snapshot.data;
+
+                                          double budgetHarian =
+                                              data.budgetMax / 30;
+                                          // double
+                                          print("object data");
+                                          print(data.tarifPerKwh);
+                                          billingToday =
+                                              data.tarifPerKwh * kwhToday;
+                                        } else {}
+
+                                        return Text(
+                                            billingToday.toStringAsFixed(0),
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontSize: ScreenUtil().setSp(
+                                                    AllString().billingrupiah[
+                                                        "size"])));
+                                      });
+                                }),
                           ],
                         ),
                       ),
@@ -387,62 +440,106 @@ class _HinergiAppState extends State<HinergiApp> {
                     padding: EdgeInsets.only(
                         bottom: ScreenUtil().setHeight(20),
                         right: ScreenUtil().setWidth(30)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          height: 120,
-                          width: 150,
-                          child: InkWell(
-                            onTap: () {
-                              print("object");
-                            },
-                            child: Card(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Save",
-                                      style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              Color.fromARGB(255, 68, 204, 112),
-                                          fontSize: ScreenUtil().setSp(
-                                              AllString().footer["size"]))),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom:
-                                                  ScreenUtil().setHeight(20),
-                                              right: ScreenUtil().setWidth(10)),
-                                          child: Text("Rp",
-                                              style: GoogleFonts.poppins(
-                                                  color: Color.fromARGB(
-                                                      255, 68, 204, 112),
-                                                  fontSize:
-                                                      ScreenUtil().setSp(30)))),
-                                      Text(AllString().footer["title"],
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.bold,
-                                              color: Color.fromARGB(
-                                                  255, 68, 204, 112),
-                                              fontSize: ScreenUtil().setSp(
-                                                  AllString().footer["size"]))),
-                                    ],
-                                  ),
-                                  Text("than Yesterday",
-                                      style: GoogleFonts.poppins(
-                                          color:
-                                              Color.fromARGB(255, 68, 204, 112),
-                                          fontSize: ScreenUtil().setSp(30))),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    child: FutureBuilder(
+                        future: getThinkspeakData(),
+                        builder: (context, snapshot) {
+                          print("data thinks : " + snapshot.data);
+                          double kwhToday = double.parse(
+                              snapshot.data.toString().split(" ")[1]);
+                          double billingToday;
+                          return FutureBuilder(
+                              future: getSetting(),
+                              builder: (context, snapshot) {
+                                Setting dataSetting = snapshot.data;
+
+                                double budgetHarian =
+                                    dataSetting.budgetMax / 30;
+                                // double
+                                print("object data");
+                                print(dataSetting.tarifPerKwh);
+                                billingToday =
+                                    dataSetting.tarifPerKwh * kwhToday;
+
+                                double lastData = budgetHarian - billingToday;
+
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      width: 150,
+                                      child: InkWell(
+                                        onTap: () {
+                                          print("object");
+                                        },
+                                        child: Card(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text("Save",
+                                                  style: GoogleFonts.poppins(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color.fromARGB(
+                                                          255, 68, 204, 112),
+                                                      fontSize: ScreenUtil()
+                                                          .setSp(AllString()
+                                                                  .footer[
+                                                              "size"]))),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: ScreenUtil()
+                                                              .setHeight(20),
+                                                          right: ScreenUtil()
+                                                              .setWidth(10)),
+                                                      child: Text("Rp",
+                                                          style: GoogleFonts.poppins(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      68,
+                                                                      204,
+                                                                      112),
+                                                              fontSize:
+                                                                  ScreenUtil()
+                                                                      .setSp(
+                                                                          30)))),
+                                                  Text(
+                                                      lastData
+                                                          .toStringAsFixed(0),
+                                                      style: GoogleFonts.poppins(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              68,
+                                                              204,
+                                                              112),
+                                                          fontSize: ScreenUtil()
+                                                              .setSp(AllString()
+                                                                      .footer[
+                                                                  "size"]))),
+                                                ],
+                                              ),
+                                              // Text("than Yesterday",
+                                              //     style: GoogleFonts.poppins(
+                                              //         color:
+                                              //             Color.fromARGB(255, 68, 204, 112),
+                                              //         fontSize: ScreenUtil().setSp(30))),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              });
+                        }),
                   ),
                 ],
               ),

@@ -105,7 +105,7 @@ class ApiServices {
       var response = await Future.wait([dio.get(link), dio.get(linkHardware)]);
 
       var dataMap = response.asMap();
-      // print(dataMap);
+      print(dataMap);
 
       // print(dataMap[0].data[0]);
       // print(dataMap[1]);

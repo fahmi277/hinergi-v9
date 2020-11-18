@@ -94,7 +94,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                     Padding(
                         padding:
-                            EdgeInsets.only(top: ScreenUtil().setHeight(5)),
+                          EdgeInsets.only(top: ScreenUtil().setHeight(5)),
                         child: Column(
                           children: [
                             Row(
@@ -142,7 +142,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       Navigator.pushNamed(context, '/setting');
                                     },
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                       child: Image.asset(
                                         'lib/assets/icons/settings.png',
                                         scale: 12,
@@ -156,7 +156,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withOpacity(0.6),
                                 child: Column(children: [
                                   Row(
                                     children: [
@@ -209,6 +209,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                     ],
                                   ),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -320,36 +321,56 @@ class _HistoryPageState extends State<HistoryPage> {
                                 )),
                                  Card(
                       elevation: 0,
-                      color: Colors.black.withOpacity(0.3),
+                      color: Color.fromARGB(255,1, 24, 89).withOpacity(0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                         side: BorderSide(
-                          color: Color.fromARGB(255, 120, 255, 145),
+                          color: Color.fromARGB(255, 64, 175, 255),
                           width: 1.5
                         )
                       ),
                       child : Padding(
                         padding:  EdgeInsets.only(
-                                  top: ScreenUtil().setHeight(50),
+                                  top: ScreenUtil().setHeight(10),
                                   bottom: ScreenUtil().setHeight(50),
                                   left: ScreenUtil().setWidth(30),
                                   right: ScreenUtil().setWidth(30)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            new LinearPercentIndicator(
-                              width: MediaQuery.of(context).size.width - 50,
-                              animation: true,
-                              lineHeight: 30.0,
-                              animationDuration: 2000,
-                              percent: 0.9,
-                              center: Text("90.0%",
-                                                  style: GoogleFonts.poppins(
-                                                  color: Colors.white,
-                                                  )),
-                              linearStrokeCap: LinearStrokeCap.roundAll,
-                              progressColor: Color.fromARGB(255, 224, 7, 7),
-                            )
+                             Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          top: ScreenUtil().setHeight(10),
+                                          bottom: ScreenUtil().setHeight(10),
+                                          left: ScreenUtil().setWidth(30),
+                                          right: ScreenUtil().setWidth(30)
+                                        ),
+                                        child:  Text('Usage progress',
+                                          style: GoogleFonts.poppins(
+                                              color: Colors.white,
+                                              fontSize:
+                                                  ScreenUtil().setSp(40))),
+                                      ),
+                                      new LinearPercentIndicator(
+                                        width: MediaQuery.of(context).size.width - 50,
+                                        animation: true,
+                                        lineHeight: 30.0,
+                                        animationDuration: 2000,
+                                        percent: 0.9,
+                                        center: Text("90.0%",
+                                                            style: GoogleFonts.poppins(
+                                                            color: Colors.white,
+                                                            )),
+                                        linearStrokeCap: LinearStrokeCap.roundAll,
+                                        progressColor: Color.fromARGB(255, 224, 7, 7),
+                                      )
+                                    ],
+                                  ),
+                            
+                             
+                            
                           ],
                         ),
                       )

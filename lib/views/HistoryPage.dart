@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hinergi_v9/resources/String.dart';
 import 'package:matcher/matcher.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:percent_indicator/percent_indicator.dart';
 
 
 
@@ -156,7 +157,7 @@ class _HistoryPageState extends State<HistoryPage>{
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withOpacity(0.6),
                       child: Column(
                         children: [
                           Row(
@@ -208,6 +209,7 @@ class _HistoryPageState extends State<HistoryPage>{
                           ],
                         ),
                         Row(
+                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
@@ -328,6 +330,42 @@ class _HistoryPageState extends State<HistoryPage>{
                                                   fontSize: ScreenUtil()
                                                       .setSp(40))
                                   ),
+                          ],
+                        ),
+                      )
+                    ),
+                    Card(
+                      elevation: 0,
+                      color: Colors.black.withOpacity(0.3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(
+                          color: Color.fromARGB(255, 120, 255, 145),
+                          width: 1.5
+                        )
+                      ),
+                      child : Padding(
+                        padding:  EdgeInsets.only(
+                                  top: ScreenUtil().setHeight(50),
+                                  bottom: ScreenUtil().setHeight(50),
+                                  left: ScreenUtil().setWidth(30),
+                                  right: ScreenUtil().setWidth(30)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            new LinearPercentIndicator(
+                              width: MediaQuery.of(context).size.width - 50,
+                              animation: true,
+                              lineHeight: 30.0,
+                              animationDuration: 2000,
+                              percent: 0.9,
+                              center: Text("90.0%",
+                                                  style: GoogleFonts.poppins(
+                                                  color: Colors.white,
+                                                  )),
+                              linearStrokeCap: LinearStrokeCap.roundAll,
+                              progressColor: Color.fromARGB(255, 224, 7, 7),
+                            )
                           ],
                         ),
                       )

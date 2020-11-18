@@ -37,6 +37,10 @@ class _HinergiAppState extends State<HinergiApp> {
     print(data.apiKey);
   }
 
+  void getHistory() {
+    ApiServices().getThinkspeakData();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose

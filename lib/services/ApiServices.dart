@@ -4,10 +4,26 @@ import 'package:dio/dio.dart';
 import 'package:hinergi_v9/model/setting.dart';
 import 'package:hinergi_v9/models/ThinkspeakModel.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Setting setting = Setting();
+Setting setSetting = Setting();
 
 class ApiServices {
+  saveHistory(int key, String penggunaan) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(key.toString(), penggunaan);
+  }
+
+  printHistory() async {
+    for (var i = 0; i < 5; i++) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var data = prefs.getString(i.toString());
+
+      print(i.toString() + " : " + data.toString());
+    }
+  }
+
   getThinkspeakData() async {
     var data = await setting.getApiId();
     String channelId = data.channelId.toString();
@@ -21,7 +37,11 @@ class ApiServices {
     var endDate = startDate.add(Duration(days: 1));
     String start;
     String end;
-    for (var i = 0; i < 5; i++) {
+    int counterHistory = 0;
+    int i = 0;
+
+    while (counterHistory < 5) {
+      i++;
       startDate = today.add(Duration(days: -i));
       endDate = startDate.add(Duration(days: 1));
       start = new DateFormat("yyyy-MM-dd").format(startDate);
@@ -53,13 +73,21 @@ class ApiServices {
         // print("panjang data : $panjangData");
         // print("start data : $startKwh");
         // print("last data : $lastKwh");
-        print("penggunaan data  $start : $koweKuduMbayar\n");
+        // print("penggunaan data  $start : $koweKuduMbayar\n");
+
+        String historyData = start.toString() + " " + enjoy.toStringAsFixed(3);
+
+        saveHistory(counterHistory, historyData);
+        counterHistory++;
+
         // return response.toString().split("[")[1].split("]")[0];
       } catch (e) {
         print(e.toString());
         // return "";
       }
     }
+
+    printHistory();
   }
 
   Future<Map> getBlynkData(String path) async {

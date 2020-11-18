@@ -178,21 +178,8 @@ class _LoginPageState extends State<LoginPage> {
                                                       chanelId = barcode.split(',')[0];
                                                       apiKey = barcode.split(',')[1];
                                                       token = barcode.split(',')[2];
-                                                      // chanelId = barcode.substring( 0, barcode.indexOf(","));
-                                                      // apiKey = barcode.substring(barcode.indexOf(",")+1, barcode.indexOf(",")+2);
-                                                      // token = barcode.substring(barcode.indexOf(",")+2, barcode.length);
-                                                      print("Channe id adalah : $chanelId");
-                                                        this.barcode = chanelId;
-                                                      // if(chanelId.isEmpty && apiKey.isEmpty){
-                                                      //     chanelId = barcode;
-                                                      //   }else if(chanelId.isEmpty && apiKey.isNotEmpty){
-                                                      //     chanelId = barcode;
-                                                      //   }else if(chanelId.isNotEmpty && apiKey.isEmpty){
-                                                      //     apiKey = barcode;
-                                                      //   }else if(chanelId.isNotEmpty && apiKey.isNotEmpty){
-                                                      //     chanelId = barcode;
-                                                      //     apiKey = "";
-                                                      //   }
+                                                      this.barcode = chanelId;
+                                                     
                                                     });
                                                   } on PlatformException catch (error) {
                                                     if (error.code == BarcodeScanner.CameraAccessDenied) {

@@ -116,8 +116,10 @@ class _HistoryPageState extends State<HistoryPage> {
                 print("fahmi maulana");
                 // return Text("data");
                 return Scaffold(
-                    body: SingleChildScrollView(
-                      child :SafeArea(
+                    body: 
+                    // SingleChildScrollView(
+                    //   child :
+                      SafeArea(
                         top: false,
                         child: Stack(
                           children: [
@@ -481,7 +483,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           ],
                         )
                         )
-                        )
+                        // )
                         );
               } else {
                 return Center(child: Text("fahmi"));

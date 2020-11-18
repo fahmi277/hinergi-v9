@@ -507,12 +507,12 @@ class _HistoryPageState extends State<HistoryPage> {
 
     List<OrdinalSales> budgetData = List(5);
     List<OrdinalSales> costData = List(5);
-    List datain = datax;
-    if (datain.isNotEmpty) {
-      
-    for (var i = 0; i < datain.length; i++) {
+
+    print("datax : " + datax.toString());
+
+    for (var i = 0; i < 5; i++) {
       // var hari = new Random();
-      print("data panjang : "+ datain.length.toString());
+      // print("data panjang : "+ datain.length.toString());
       var random = new Random();
       int randomData = random.nextInt(10);
       int hariData = i + 1;
@@ -525,14 +525,6 @@ class _HistoryPageState extends State<HistoryPage> {
       budgetData[i] = new OrdinalSales(dataTanggal, budgetHarian);
       costData[i] =
           new OrdinalSales(dataTanggal, double.parse(dataUsage) * perKwh);
-    }
-
-    } else {
-      for (var i = 0; i < 5; i++) {
-        budgetData[i] = new OrdinalSales("0", budgetHarian);
-        costData[i] =
-          new OrdinalSales("0", double.parse("0") * perKwh);
-      }
     }
 
     // for (var i = 0; i < 5; i++) {

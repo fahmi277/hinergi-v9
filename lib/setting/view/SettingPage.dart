@@ -27,6 +27,8 @@ class _SettingPage extends State<SettingPage> {
   String budget = "";
   String kwh = "";
 
+  bool flag = false;
+
   final _formKey = GlobalKey<FormState>();
 
   //  @override
@@ -48,10 +50,11 @@ class _SettingPage extends State<SettingPage> {
             token = snapshot.data.token.toString();
           }
 
-          if(tarif == "" || budget == "" || kwh == ""){
+          if((tarif == "" || budget == "" || kwh == "") && flag == false){
             tarif = snapshot.data.tarifPerKwh.toString();
             budget = snapshot.data.budgetMax.toString();
             kwh = snapshot.data.kwhMax.toString();
+            flag = true;
           }
 
           return new Scaffold(
@@ -151,7 +154,7 @@ class _SettingPage extends State<SettingPage> {
                         MyTextFormField(
                           hintText: 'Masukkan tarif listrik',
                           labelText: 'Tarif per KWh',
-                          value: snapshot.data.tarifPerKwh.toString() ?? '0',
+                          value: tarif,
                           isEmail: false,
                           icon: Icon(Icons.money),
                           validator: (String value) {
@@ -161,13 +164,14 @@ class _SettingPage extends State<SettingPage> {
                             return null;
                           },
                           onSaved: (String value) {
+                            tarif = value;
                             setting.tarifPerKwh = double.parse(value);
                           },
                         ),
                         MyTextFormField(
                           hintText: 'Masukkan budget anda',
                           labelText: 'Budget (Rp./Month)',
-                          value: snapshot.data.budgetMax.toString() ?? '0',
+                          value: budget,
                           isEmail: false,
                           icon: Icon(Icons.money_off_rounded),
                           validator: (String value) {
@@ -177,13 +181,14 @@ class _SettingPage extends State<SettingPage> {
                             return null;
                           },
                           onSaved: (String value) {
+                            budget = value;
                             setting.budgetMax = double.parse(value);
                           },
                         ),
                         MyTextFormField(
                           hintText: 'Masukkan batas watt meter',
                           labelText: 'Batas daya',
-                          value: snapshot.data.kwhMax.toString() ?? '0',
+                          value: kwh,
                           isEmail: false,
                           icon: Icon(Icons.lightbulb_outline_sharp),
                           validator: (String value) {
@@ -193,6 +198,7 @@ class _SettingPage extends State<SettingPage> {
                             return null;
                           },
                           onSaved: (String value) {
+                            kwh = value;
                             setting.kwhMax = double.parse(value);
                           },
                         ),

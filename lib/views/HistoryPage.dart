@@ -504,6 +504,8 @@ class _HistoryPageState extends State<HistoryPage> {
     List<OrdinalSales> budgetData = List(5);
     List<OrdinalSales> costData = List(5);
 
+    print("datax : " + datax.toString());
+
     for (var i = 0; i < 5; i++) {
       // var hari = new Random();
       var random = new Random();

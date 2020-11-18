@@ -55,6 +55,7 @@ class _HinergiAppState extends State<HinergiApp> {
     super.initState();
 
     // timerBlynk();
+    getHistory();
     getApi();
     blynkBloc.timerBlynk({0: 1, 1: 1});
   }

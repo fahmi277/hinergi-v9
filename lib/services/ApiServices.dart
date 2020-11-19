@@ -72,6 +72,9 @@ class ApiServices {
         double lastKwh =
             double.parse(dataThinkspeak.feeds[panjangData - 1].field4);
         double enjoy = lastKwh - startKwh;
+        if(enjoy < 0){
+          enjoy = 0;
+        }
         double koweKuduMbayar = enjoy * 1200;
         // print("panjang data : $panjangData");
         // print("start data : $startKwh");

@@ -53,9 +53,11 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: FutureBuilder(
+    return 
+    // MaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     home: 
+        FutureBuilder(
             future: printHistory(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -159,8 +161,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                                     ScreenUtil().setWidth(10)),
                                             child: InkWell(
                                               onTap: () {
-                                                // Navigator.pushNamed(
-                                                //     context, '/home');
+                                                Navigator.pushNamed(
+                                                    context, '/home');
                                               },
                                               child: ClipRRect(
                                                 borderRadius:
@@ -488,7 +490,8 @@ class _HistoryPageState extends State<HistoryPage> {
               } else {
                 return Center(child: Text("fahmi"));
               }
-            }));
+            });
+            // );
   }
 
   /// Create series list with multiple series

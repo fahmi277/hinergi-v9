@@ -42,7 +42,9 @@ class BlynkBLoc {
 
   void timerBlynk(Map data) {
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) async {
-      var dataBlynk = await ApiServices().getBlynkData("/get/V2");
+      // var dataBlynk = await ApiServices().getBlynkData("/get/V2");
+      var dataBlynk = await ApiServices().getServerData();
+      print("masuk bylink");
       _stateSinkBlynk.add(dataBlynk);
       // print(dataBlynk);
     });

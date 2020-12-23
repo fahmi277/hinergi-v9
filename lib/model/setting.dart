@@ -5,6 +5,7 @@ class Setting {
   double budgetMax = 0;
   double kwhMax = 0;
   double tarifPerKwh = 0;
+  int unit = 0;
   String channelId;
   String apiKey;
   String token;
@@ -13,6 +14,7 @@ class Setting {
       {this.channelId,
       this.apiKey,
       this.token,
+      this.unit,
       this.tarifPerKwh,
       this.budgetMax,
       this.kwhMax});
@@ -25,6 +27,7 @@ class Setting {
     prefs.setDouble('tarif', set.tarifPerKwh);
     prefs.setDouble('budget', set.budgetMax);
     prefs.setDouble('kwhmax', set.kwhMax);
+    prefs.setInt('unit', set.unit);
     //start time
     prefs.setString("startTime", "2020-10-10");
   }
@@ -37,6 +40,7 @@ class Setting {
     prefs.setDouble('tarif', 0);
     prefs.setDouble('budget', 0);
     prefs.setDouble('kwhmax', 0);
+    prefs.setInt('unit', 1);
     prefs.setString("startTime", "2020-10-10");
   }
 
@@ -58,6 +62,11 @@ class Setting {
   setButget(double data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setDouble('butget', data);
+  }
+
+  setUnit(int unit) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('unit', unit);
   }
 
   removeSetting() async {
@@ -108,6 +117,7 @@ class Setting {
       set.tarifPerKwh = prefs.getDouble('tarif') ?? 0;
       set.budgetMax = prefs.getDouble('budget') ?? 0;
       set.kwhMax = prefs.getDouble('kwhmax') ?? 0;
+      set.unit = prefs.getInt('unit') ?? 1;
       return set;
     } catch (e) {
       print("error : "+e.toString());
@@ -118,6 +128,7 @@ class Setting {
       set.tarifPerKwh = 0;
       set.budgetMax = 0;
       set.kwhMax = 0;
+      set.unit = 1;
       return set;
     }
   }

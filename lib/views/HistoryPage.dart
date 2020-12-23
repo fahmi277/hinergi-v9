@@ -11,6 +11,7 @@ import 'package:matcher/matcher.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hinergi_v9/services/ApiServices.dart';
 
 var datax;
 
@@ -18,6 +19,7 @@ double budgetHarian;
 double budget;
 double usageProgress;
 double perKwh;
+int unit;
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -43,6 +45,11 @@ class OrdinalSales {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+
+  getHistoryData() async {
+    return ApiServices().getDataHistory();
+  }
+
   @override
   initState() {
     // TODO: implement initState
@@ -60,8 +67,12 @@ class _HistoryPageState extends State<HistoryPage> {
         FutureBuilder(
             future: printHistory(),
             builder: (context, snapshot) {
+              // printHistory();
               if (snapshot.hasData) {
-                print(snapshot.data);
+                List<dynamic> data1 = snapshot.data["data"];
+                datax = data1;
+                print(data1);
+                
                 List<charts.Series> seriesList = _createSampleData();
                 final bool animate = false;
 
@@ -75,17 +86,17 @@ class _HistoryPageState extends State<HistoryPage> {
                 Color textSave = Colors.white;
                 String stringTextSave = "Save";
 
-                String dataUsage = datax[0]
-                    .toString()
-                    .split(": ")[1]
-                    .split("-")[2]
-                    .split(" ")[1];
+                String dataUsage = datax[0]["energy"].toString();
+                //     .toString()
+                //     .split(": ")[1]
+                //     .split("-")[2]
+                //     .split(" ")[1];
 
                 double dataUsage1 = double.parse(dataUsage);
 
-                String cost = (dataUsage1 * perKwh).toStringAsFixed(0);
+                String cost = (dataUsage1 * perKwh/unit).toString();
 
-                double doubleSave = budgetHarian - (dataUsage1 * perKwh);
+                double doubleSave = budgetHarian - (dataUsage1 * perKwh/unit);
 
                 if (doubleSave < 0) {
                   textSave = Colors.red;
@@ -100,11 +111,11 @@ class _HistoryPageState extends State<HistoryPage> {
 
                 if (persentase > 1) {
                   progressText =
-                      "Over " + (persentase - 1).toStringAsFixed(2) + "%";
+                      "Over " + ((persentase - 1) * 100).toStringAsFixed(2) + "%";
                   persentase = 1;
                   progressBarColor = Colors.red;
                 } else {
-                  progressText = persentase.toStringAsFixed(2) + "%";
+                  progressText = (persentase * 100).toStringAsFixed(2) + "%";
                 }
 
                 var chartWidget = Padding(
@@ -333,7 +344,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                               Text(
                                                   "Rp. " +
                                                       budgetHarian
-                                                          .toStringAsFixed(0),
+                                                          .toStringAsFixed(2),
                                                   style: GoogleFonts.poppins(
                                                       color: Colors.white,
                                                       fontSize: ScreenUtil()
@@ -510,26 +521,31 @@ class _HistoryPageState extends State<HistoryPage> {
       new OrdinalSales('2017', 20),
     ];
 
-    List<OrdinalSales> budgetData = List(5);
-    List<OrdinalSales> costData = List(5);
+    List<OrdinalSales> budgetData = List<OrdinalSales>();
+    List<OrdinalSales> costData = List<OrdinalSales>();
 
     print("datax : " + datax.toString());
-
-    for (var i = 0; i < 5; i++) {
+    // List<dynamic> data = datax["data"];
+    List datain = datax;
+    for (var i = datain.length-1; i >= 0; i--) {
       // var hari = new Random();
-      // print("data panjang : "+ datain.length.toString());
+      print("data panjang : "+ datain.length.toString());
       var random = new Random();
       int randomData = random.nextInt(10);
       int hariData = i + 1;
-      String dataTanggal =
-          datax[4 - i].toString().split(": ")[1].split("-")[2].split(" ")[0];
+     
+      String dataTanggal =datax[i]["tgl"];
+      print("data tgl : "+ datax[i]["tgl"]);
+          // datax[4 - i].toString().split(": ")[1].split("-")[2].split(" ")[0];
       // print(dataTanggal);
-      String dataUsage =
-          datax[4 - i].toString().split(": ")[1].split("-")[2].split(" ")[1];
+      String dataUsage = datax[i]["energy"].toString() ?? "0";
+      print("data energy : "+ datax[i]["energy"].toString());
 
-      budgetData[i] = new OrdinalSales(dataTanggal, budgetHarian);
-      costData[i] =
-          new OrdinalSales(dataTanggal, double.parse(dataUsage) * perKwh);
+      print("budget harian : "+ budgetHarian.toString());
+          // datax[4 - i].toString().split(": ")[1].split("-")[2].split(" ")[1];
+
+      budgetData.add(OrdinalSales(dataTanggal, budgetHarian));
+      costData.add(OrdinalSales(dataTanggal, double.parse(dataUsage) * perKwh/unit));
     }
 
     // for (var i = 0; i < 5; i++) {
@@ -563,19 +579,32 @@ class _HistoryPageState extends State<HistoryPage> {
 }
 
 printHistory() async {
-  List historyData = new List(5);
-  for (var i = 0; i < 5; i++) {
+  //query lama
+  // List historyData = new List(5);
+  // for (var i = 0; i < 5; i++) {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var data = prefs.getString(i.toString());
+    // var data = prefs.getString(i.toString());
 
     double budget = prefs.getDouble('budget');
     perKwh = prefs.getDouble('tarif');
+    unit = prefs.getInt('unit');
     budgetHarian = budget / 30;
-    // print(i.toString() + " : " + data.toString());
-    historyData[i] = i.toString() + " : " + data.toString();
-  }
-  datax = historyData;
-  return historyData;
+  //   // print(i.toString() + " : " + data.toString());
+  //   historyData[i] = i.toString() + " : " + data.toString();
+  // }
+
+
+  // datax = historyData;
+  var data = ApiServices().getDataHistory();
+  // List<dynamic> data1 = data["data"];
+  // Future<dynamic> data2 = data["data"];
+  // List arr = new List();
+  // for(int i=0; i<data1.length; i++){
+  //   arr.add(data1[i]);
+  // }
+  // datax = arr;
+  // Future<dynamic> datareturn = datax;
+  return data;
 
   // return historyData;
 }

@@ -24,6 +24,50 @@ class ApiServices {
     }
   }
 
+  getServerData() async {
+    var data = await setting.getApiId();
+    String channelId = data.channelId.toString();
+    String apiKey = data.apiKey.toString();
+    var dio = Dio();
+    // print("mulai straming api data");
+    String link ="http://103.157.96.143/api/resource/first_last_today/"+channelId;
+    try {
+      // print("mulai get data json adalah : ");
+      Response response = await dio.get(link);
+      Map<String, dynamic> map = jsonDecode(response.toString());
+      Map<String, dynamic> data = map["data2"];
+      // var dataJson = jsonDecode(response.data);
+      // print("data json adalah : "+data["energy"].toString());
+      // getDataHistory();
+      return map;
+    } catch (e) {
+        print(e.toString());
+        // return "";
+    }
+
+  }
+
+  getDataHistory() async {
+    var data = await setting.getApiId();
+    String channelId = data.channelId.toString();
+    print("mulai straming api data");
+    String link ="http://103.157.96.143/api/resource/last_five_day/"+channelId;
+    try {
+      print("mulai get data json adalah : ");
+      var dio = Dio();
+      Response response = await dio.get(link);
+      Map<String, dynamic> map = jsonDecode(response.toString());
+      List<dynamic> data = map["data"];
+      // var dataJson = jsonDecode(response.data);
+      print("panjang data adalah : "+data.length.toString());
+      print("data json history adalah : "+data[0]["energy"].toString());
+      return map;
+    } catch (e) {
+        print(e.toString());
+        // return "";
+    }
+  }
+ 
   getThinkspeakData() async {
     var data = await setting.getApiId();
     String channelId = data.channelId.toString();

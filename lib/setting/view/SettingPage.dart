@@ -9,6 +9,7 @@ import 'package:hinergi_v9/views/HistoryPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hinergi_v9/setting/model/dropdown_formfield.dart';
 import 'package:validators/validators.dart' as validator;
 
 class SettingPage extends StatefulWidget {
@@ -28,10 +29,14 @@ class _SettingPage extends State<SettingPage> {
   String tarif = "";
   String budget = "";
   String kwh = "";
+  String unit = "";
 
   bool flag = false;
 
   final _formKey = GlobalKey<FormState>();
+
+  String _myActivity;
+  String _myActivityResult;
 
   //  @override
   // void initState() {
@@ -56,6 +61,7 @@ class _SettingPage extends State<SettingPage> {
             tarif = snapshot.data.tarifPerKwh.toString();
             budget = snapshot.data.budgetMax.toString();
             kwh = snapshot.data.kwhMax.toString();
+            unit = snapshot.data.unit.toString();
             flag = true;
           }
 
@@ -121,38 +127,66 @@ class _SettingPage extends State<SettingPage> {
                             setting.channelId = value;
                           },
                         ),
-                        MyTextFormField(
-                          hintText: 'Masukkan API Key anda',
-                          labelText: 'API Key',
-                          value: apiKey,
-                          isEmail: false,
-                          icon: Icon(Icons.vpn_key_sharp),
-                          validator: (String value) {
-                            if (validator.isNull(value)) {
-                              return 'Please enter a api key';
+                        DropDownFormField(
+                          titleText: 'My workout',
+                          hintText: 'Select Unit',
+                          value: unit,
+                          icon: Icon(Icons.verified_user),
+                          onSaved: (value) {
+                            setState(() {
+                              setting.unit = int.parse(value);
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              unit = value;
+                            });
+                          },
+                          dataSource: [
+                            {
+                              "display": "WH",
+                              "value": "1",
+                            },
+                            {
+                              "display": "KWH",
+                              "value": "1000",
                             }
-                            return null;
-                          },
-                          onSaved: (String value) {
-                            setting.apiKey = value;
-                          },
+                          ],
+                          textField: 'display',
+                          valueField: 'value',
                         ),
-                        MyTextFormField(
-                          hintText: 'Masukkan token anda',
-                          labelText: 'Token',
-                          value: token,
-                          isEmail: false,
-                          icon: Icon(Icons.vpn_key_sharp),
-                          validator: (String value) {
-                            if (validator.isNull(value)) {
-                              return 'Please enter a token';
-                            }
-                            return null;
-                          },
-                          onSaved: (String value) {
-                            setting.token = value;
-                          },
-                        ),
+                        // MyTextFormField(
+                        //   hintText: 'Masukkan API Key anda',
+                        //   labelText: 'API Key',
+                        //   value: apiKey,
+                        //   isEmail: false,
+                        //   icon: Icon(Icons.vpn_key_sharp),
+                        //   validator: (String value) {
+                        //     if (validator.isNull(value)) {
+                        //       return 'Please enter a api key';
+                        //     }
+                        //     return null;
+                        //   },
+                        //   onSaved: (String value) {
+                        //     setting.apiKey = value;
+                        //   },
+                        // ),
+                        // MyTextFormField(
+                        //   hintText: 'Masukkan token anda',
+                        //   labelText: 'Token',
+                        //   value: token,
+                        //   isEmail: false,
+                        //   icon: Icon(Icons.vpn_key_sharp),
+                        //   validator: (String value) {
+                        //     if (validator.isNull(value)) {
+                        //       return 'Please enter a token';
+                        //     }
+                        //     return null;
+                        //   },
+                        //   onSaved: (String value) {
+                        //     setting.token = value;
+                        //   },
+                        // ),
                         MyTextFormField(
                           hintText: 'Masukkan tarif listrik',
                           labelText: 'Tarif per KWh',
@@ -435,3 +469,6 @@ class _SettingPage extends State<SettingPage> {
     );
   }
 }
+
+
+

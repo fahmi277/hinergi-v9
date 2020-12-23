@@ -101,52 +101,52 @@ class _LoginPageState extends State<LoginPage> {
                                                   ),                                  
                                                 ],
                                               ),
-                                              Row(
-                                                children: [
-                                                  Flexible(
-                                                      child: MyTextFormField(
-                                                          hintText: 'Masukkan API Key anda',
-                                                          labelText: 'API Key',
-                                                          value: apiKey,
-                                                          // isEmail: false,
-                                                          validator: (String value) {
-                                                            if (validator.isNull(value)) {
-                                                              return 'Please enter a api key';
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (String value) {
-                                                            setting.apiKey = value;
-                                                          },
-                                                          // textInputType: TextInputType.text)
-                                                          )
-                                                          )
+                                              // Row(
+                                              //   children: [
+                                              //     Flexible(
+                                              //         child: MyTextFormField(
+                                              //             hintText: 'Masukkan API Key anda',
+                                              //             labelText: 'API Key',
+                                              //             value: apiKey,
+                                              //             // isEmail: false,
+                                              //             validator: (String value) {
+                                              //               if (validator.isNull(value)) {
+                                              //                 return 'Please enter a api key';
+                                              //               }
+                                              //               return null;
+                                              //             },
+                                              //             onSaved: (String value) {
+                                              //               setting.apiKey = value;
+                                              //             },
+                                              //             // textInputType: TextInputType.text)
+                                              //             )
+                                              //             )
                                                  
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Flexible(
-                                                      child: MyTextFormField(
-                                                          hintText: 'Masukkan token anda',
-                                                          labelText: 'Token',
-                                                          value: token,
-                                                          // isEmail: false,
-                                                          validator: (String value) {
-                                                            if (validator.isNull(value)) {
-                                                              return 'Please enter a  token';
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (String value) {
-                                                            setting.token = value;
-                                                          },
-                                                          // textInputType: TextInputType.text)
-                                                          )
-                                                          )
+                                              //   ],
+                                              // ),
+                                              // Row(
+                                              //   children: [
+                                              //     Flexible(
+                                              //         child: MyTextFormField(
+                                              //             hintText: 'Masukkan token anda',
+                                              //             labelText: 'Token',
+                                              //             value: token,
+                                              //             // isEmail: false,
+                                              //             validator: (String value) {
+                                              //               if (validator.isNull(value)) {
+                                              //                 return 'Please enter a  token';
+                                              //               }
+                                              //               return null;
+                                              //             },
+                                              //             onSaved: (String value) {
+                                              //               setting.token = value;
+                                              //             },
+                                              //             // textInputType: TextInputType.text)
+                                              //             )
+                                              //             )
                                                  
-                                                ],
-                                              ),
+                                              //   ],
+                                              // ),
                                             ],
                                           ),
                                         ),
@@ -175,9 +175,10 @@ class _LoginPageState extends State<LoginPage> {
                                                       String coba = '1154780,SPZVVOM0D4YO6TX0,horeksdfklj';
                                                       print(coba.split(',')[0]);
                                                       // this.barcode = barcode;
-                                                      chanelId = barcode.split(',')[0];
-                                                      apiKey = barcode.split(',')[1];
-                                                      token = barcode.split(',')[2];
+                                                      chanelId = barcode;
+                                                      // chanelId = barcode.split(',')[0];
+                                                      // apiKey = barcode.split(',')[1];
+                                                      // token = barcode.split(',')[2];
                                                       this.barcode = chanelId;
                                                      
                                                     });
@@ -283,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                     // }
                    
                   }else{
-                    if (snapshot.data.channelId == null|| snapshot.data.apiKey == null || snapshot.data.token == null){
+                    if (snapshot.data.channelId == null){
                       return  MaterialApp(
                         debugShowCheckedModeBanner: false,
                         home: Scaffold(
@@ -356,65 +357,65 @@ class _LoginPageState extends State<LoginPage> {
                                                   // ),
                                                 ],
                                               ),
-                                              Row(
-                                                children: [
-                                                  Flexible(
-                                                      child: MyTextFormField(
-                                                          hintText: 'Masukkan API Key anda',
-                                                          labelText: 'API Key',
-                                                          value: apiKey,
-                                                          // isEmail: false,
-                                                          validator: (String value) {
-                                                            if (validator.isNull(value)) {
-                                                              return 'Please enter a api key';
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (String value) {
-                                                            setting.apiKey = value;
-                                                          },
-                                                          // textInputType: TextInputType.text)
-                                                          )
-                                                          )
-                                                  // Flexible(
-                                                  //   child: MyTextFormField(
-                                                  //       validator: (String value) {
-                                                  //         if (value.isEmpty) {
-                                                  //           return "Isikan Api Key";
-                                                  //         }
-                                                  //         return null;
-                                                  //       },
-                                                  //       onSaved: (String value) {
-                                                  //         userData.apiKey = value;
-                                                  //       },
-                                                  //       labelText: "Api Key",
-                                                  //       textInputType: TextInputType.text),
-                                                  // ),
-                                                ],
-                                              ),
-                                               Row(
-                                                children: [
-                                                  Flexible(
-                                                      child: MyTextFormField(
-                                                          hintText: 'Masukkan token anda',
-                                                          labelText: 'Token',
-                                                          value: token,
-                                                          // isEmail: false,
-                                                          validator: (String value) {
-                                                            if (validator.isNull(value)) {
-                                                              return 'Please enter a  token';
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (String value) {
-                                                            setting.token = value;
-                                                          },
-                                                          // textInputType: TextInputType.text)
-                                                          )
-                                                          )
+                                              // Row(
+                                              //   children: [
+                                              //     Flexible(
+                                              //         child: MyTextFormField(
+                                              //             hintText: 'Masukkan API Key anda',
+                                              //             labelText: 'API Key',
+                                              //             value: apiKey,
+                                              //             // isEmail: false,
+                                              //             validator: (String value) {
+                                              //               if (validator.isNull(value)) {
+                                              //                 return 'Please enter a api key';
+                                              //               }
+                                              //               return null;
+                                              //             },
+                                              //             onSaved: (String value) {
+                                              //               setting.apiKey = value;
+                                              //             },
+                                              //             // textInputType: TextInputType.text)
+                                              //             )
+                                              //             )
+                                              //     // Flexible(
+                                              //     //   child: MyTextFormField(
+                                              //     //       validator: (String value) {
+                                              //     //         if (value.isEmpty) {
+                                              //     //           return "Isikan Api Key";
+                                              //     //         }
+                                              //     //         return null;
+                                              //     //       },
+                                              //     //       onSaved: (String value) {
+                                              //     //         userData.apiKey = value;
+                                              //     //       },
+                                              //     //       labelText: "Api Key",
+                                              //     //       textInputType: TextInputType.text),
+                                              //     // ),
+                                              //   ],
+                                              // ),
+                                              //  Row(
+                                              //   children: [
+                                              //     Flexible(
+                                              //         child: MyTextFormField(
+                                              //             hintText: 'Masukkan token anda',
+                                              //             labelText: 'Token',
+                                              //             value: token,
+                                              //             // isEmail: false,
+                                              //             validator: (String value) {
+                                              //               if (validator.isNull(value)) {
+                                              //                 return 'Please enter a  token';
+                                              //               }
+                                              //               return null;
+                                              //             },
+                                              //             onSaved: (String value) {
+                                              //               setting.token = value;
+                                              //             },
+                                              //             // textInputType: TextInputType.text)
+                                              //             )
+                                              //             )
                                                  
-                                                ],
-                                              ),
+                                              //   ],
+                                              // ),
                                             ],
                                           ),
                                         ),
@@ -441,9 +442,10 @@ class _LoginPageState extends State<LoginPage> {
                                                     String barcode = await BarcodeScanner.scan();
                                                     setState(() {
                                                       // this.barcode = barcode;
-                                                      chanelId = barcode.split(',')[0];
-                                                      apiKey = barcode.split(',')[1];
-                                                      token = barcode.split(',')[2];
+                                                      chanelId = barcode;
+                                                      // chanelId = barcode.split(',')[0];
+                                                      // apiKey = barcode.split(',')[1];
+                                                      // token = barcode.split(',')[2];
                                                       print("Channe id adalah : $chanelId");
                                                         this.barcode = chanelId;
                                                       // if(chanelId.isEmpty && apiKey.isEmpty){

@@ -33,6 +33,7 @@ class _HinergiAppState extends State<HinergiApp> {
   Setting setting = Setting();
   Setting ambilSetting = Setting();
   String rupiah;
+  double kwhreal=0;
 // get setting
   Future<void> getApi() async {
     var data = await setting.getApiId();
@@ -55,12 +56,16 @@ class _HinergiAppState extends State<HinergiApp> {
     return data;
   }
 
+  getServerData() async {
+    return ApiServices().getServerData();
+  }
+
   void getHistory() {
     ApiServices().getThinkspeakData();
   }
 
   void timer1() {
-    Timer timer = Timer.periodic(Duration(seconds: 5), (Timer _) async {
+    Timer timer = Timer.periodic(Duration(seconds: 10), (Timer _) async {
       setState(() {});
     });
   }
@@ -79,14 +84,16 @@ class _HinergiAppState extends State<HinergiApp> {
     super.initState();
     timer1();
     // timerBlynk();
-    getHistory();
+    // getHistory();
     // getApi();
     // getSetting();
     blynkBloc.timerBlynk({0: 1, 1: 1});
   }
 
+  
   @override
   Widget build(BuildContext context) {
+    double kwhMaxSet=1000;
     ScreenUtil.init(context,
         designSize: Size(750, 1334), allowFontScaling: false);
     return MaterialApp(
@@ -180,18 +187,33 @@ class _HinergiAppState extends State<HinergiApp> {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
-                                  bottom: ScreenUtil().setHeight(50)),
+                                  bottom: ScreenUtil().setHeight(40)),
                               child: Text("Rp",
                                   style: GoogleFonts.poppins(
                                       color: Colors.white,
                                       fontSize: ScreenUtil().setSp(30))),
                             ),
                             FutureBuilder(
-                                future: getThinkspeakData(),
+                                // future: getThinkspeakData(),
+                                future: getServerData(),
                                 builder: (context, snapshot) {
                                   // print("data thinks : " + snapshot.data);
-                                  double kwhToday = double.parse(
-                                      snapshot.data.toString().split(" ")[1]);
+                                  double kwhToday = 0;
+                                  double kwhfirst = 0;
+                                  double kwhlast = 0;
+                                  if(snapshot.hasData){
+                                   
+                                    Map<String, dynamic> data1 = snapshot.data["data1"];
+                                    Map<String, dynamic> data2 = snapshot.data["data2"];
+                                    kwhfirst = double.parse(data1["energy"].toString());
+                                    kwhlast = double.parse(data2["energy"].toString());
+                                    kwhToday = kwhlast - kwhfirst;
+                                    kwhreal = kwhToday;//double.parse(data2["power"].toString());
+                                     print("data di app" + kwhToday.toString());
+                                    //  kwhToday = double.parse(
+                                    //   snapshot.data["energy"].toString());
+                                  }
+                                  
                                   double billingToday;
 
                                   return FutureBuilder(
@@ -203,20 +225,30 @@ class _HinergiAppState extends State<HinergiApp> {
 
                                           double budgetHarian =
                                               data.budgetMax / 30;
+                                              kwhMaxSet = data.kwhMax;
                                           // double
                                           // print("object data");
                                           // print(data.tarifPerKwh);
-                                          billingToday =
-                                              data.tarifPerKwh * kwhToday;
-                                        } else {}
-
-                                        return Text(
+                                          billingToday = 
+                                              (data.tarifPerKwh * kwhToday)/data.unit;
+                                            return Text(
                                             billingToday.toStringAsFixed(0),
                                             style: GoogleFonts.poppins(
                                                 color: Colors.white,
                                                 fontSize: ScreenUtil().setSp(
                                                     AllString().billingrupiah[
                                                         "size"])));
+                                        } else {
+                                          return Text(
+                                            "0",
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontSize: ScreenUtil().setSp(
+                                                    AllString().billingrupiah[
+                                                        "size"])));
+                                        }
+
+                                        
                                       });
                                 }),
                           ],
@@ -316,19 +348,19 @@ class _HinergiAppState extends State<HinergiApp> {
                   },
                   builder: (context, snapshot) {
                     // kwhRealtime = double.parse(snapshot.data);
-                    // print(snapshot.data);
+                    print("data snapshot : "+snapshot.data.toString());
                     var dataApi = snapshot.data;
 
-                    statusHardware = dataApi[1].toString();
-                    var dataKwh =
-                        dataApi.toString().split("[")[1].split("]")[0];
+                    statusHardware = "true";//dataApi[1].toString();
+                    var dataKwh;
+                        // dataApi.toString().split("[")[1].split("]")[0];
                     String textHardware = "Disconnect";
                     String kwhStatus = "Carry Limit";
 
                     if (statusHardware == "true") {
                       textColorHardware = Color.fromARGB(255, 68, 204, 112);
                       textHardware = "Connect";
-                      kwhRealtime = double.parse(dataKwh);
+                      kwhRealtime = kwhreal;//double.parse(dataKwh);
                       dataKwh = kwhRealtime.toStringAsFixed(1) + " W";
                     } else {
                       textColorHardware = Colors.red;
@@ -338,6 +370,9 @@ class _HinergiAppState extends State<HinergiApp> {
                       kwhStatus = "";
                     }
 
+                    if(kwhMaxSet < kwhRealtime){
+                      kwhMaxSet = kwhRealtime;
+                    }
                     return Padding(
                       padding: EdgeInsets.only(top: 0.20.sh),
                       child: Center(
@@ -352,7 +387,7 @@ class _HinergiAppState extends State<HinergiApp> {
                                         axisLabelStyle:
                                             GaugeTextStyle(color: Colors.white),
                                         minimum: 0,
-                                        maximum: 150 * 10.0,
+                                        maximum: kwhMaxSet / 30,
                                         startAngle: 120,
                                         endAngle: -20,
                                         pointers: <GaugePointer>[
@@ -368,63 +403,71 @@ class _HinergiAppState extends State<HinergiApp> {
                                           GaugeAnnotation(
                                               widget: Stack(
                                                 children: [
+                                                  // Center(
+                                                  //     child: Padding(
+                                                  //   padding: EdgeInsets.only(
+                                                  //     bottom: ScreenUtil()
+                                                  //         .setHeight(150),
+                                                  //   ),
+                                                  //   child: Container(
+                                                  //     height: 50,
+                                                  //     width: 120,
+                                                  //     // color: Colors.red,
+                                                  //     child: Card(
+                                                  //       child: Center(
+                                                  //         child: Text(
+                                                  //             textHardware,
+                                                  //             style: GoogleFonts.poppins(
+                                                  //                 fontWeight:
+                                                  //                     FontWeight
+                                                  //                         .bold,
+                                                  //                 color:
+                                                  //                     textColorHardware,
+                                                  //                 fontSize:
+                                                  //                     ScreenUtil()
+                                                  //                         .setSp(
+                                                  //                             30))),
+                                                  //       ),
+                                                  //     ),
+                                                  //   ),
+                                                  // )
+                                                  // ),
                                                   Center(
-                                                      child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      bottom: ScreenUtil()
-                                                          .setHeight(150),
-                                                    ),
-                                                    child: Container(
-                                                      height: 50,
-                                                      width: 120,
-                                                      // color: Colors.red,
-                                                      child: Card(
-                                                        child: Center(
-                                                          child: Text(
-                                                              textHardware,
-                                                              style: GoogleFonts.poppins(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color:
-                                                                      textColorHardware,
-                                                                  fontSize:
-                                                                      ScreenUtil()
-                                                                          .setSp(
-                                                                              30))),
-                                                        ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                        bottom: ScreenUtil()
+                                                          .setHeight(60),
+                                                        top: ScreenUtil()
+                                                            .setHeight(120),
+                                                        // left: ScreenUtil()
+                                                        //     .setWidth(250),
                                                       ),
+                                                      child: Container(
+                                                        height: 120,
+                                                      width: 420,
+                                                          child: Column(
+                                                        children: [
+                                                          Text(dataKwh,
+                                                              style: GoogleFonts.poppins(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: ScreenUtil()
+                                                                      .setSp(AllString()
+                                                                              .dummyKwhStatus[
+                                                                          "size"]))),
+                                                          Text(kwhStatus,
+                                                              style: GoogleFonts.poppins(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: ScreenUtil()
+                                                                      .setSp(AllString()
+                                                                              .dummyKwhStatus["size"] -
+                                                                          20))),
+                                                        ],
+                                                      )),
                                                     ),
-                                                  )),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                      top: ScreenUtil()
-                                                          .setHeight(320),
-                                                      left: ScreenUtil()
-                                                          .setWidth(250),
-                                                    ),
-                                                    child: Container(
-                                                        child: Column(
-                                                      children: [
-                                                        Text(dataKwh,
-                                                            style: GoogleFonts.poppins(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: ScreenUtil()
-                                                                    .setSp(AllString()
-                                                                            .dummyKwhStatus[
-                                                                        "size"]))),
-                                                        Text(kwhStatus,
-                                                            style: GoogleFonts.poppins(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: ScreenUtil()
-                                                                    .setSp(AllString()
-                                                                            .dummyKwhStatus["size"] -
-                                                                        20))),
-                                                      ],
-                                                    )),
-                                                  ),
+                                                  )
+                                                  
                                                 ],
                                               ),
                                               angle: 40,
@@ -441,108 +484,134 @@ class _HinergiAppState extends State<HinergiApp> {
                         bottom: ScreenUtil().setHeight(20),
                         right: ScreenUtil().setWidth(30)),
                     child: FutureBuilder(
-                        future: getThinkspeakData(),
+                        future: getServerData(),
                         builder: (context, snapshot) {
-                          // print("data thinks : " + snapshot.data);
-                          double kwhToday = double.parse(
-                              snapshot.data.toString().split(" ")[1]);
-                          double billingToday;
-                          return FutureBuilder(
-                              future: getSetting(),
-                              builder: (context, snapshot) {
-                                Setting dataSetting = snapshot.data;
+                            double kwhToday = 0;
+                            double kwhfirst = 0;
+                            double kwhlast = 0;
+                          if(snapshot.hasData){
+                            Map<String, dynamic> data1 = snapshot.data["data1"];
+                            Map<String, dynamic> data2 = snapshot.data["data2"];
+                            kwhfirst = double.parse(data1["energy"].toString());
+                            kwhlast = double.parse(data2["energy"].toString());
+                            kwhToday = kwhlast - kwhfirst;
+                            //  double kwhToday = double.parse(
+                            //   snapshot.data.toString().split(" ")[1]);
+                            double billingToday;
 
-                                double budgetHarian =
-                                    dataSetting.budgetMax / 30;
-                                // double
-                                // print("object data");
-                                // print(dataSetting.tarifPerKwh);
-                                billingToday =
-                                    dataSetting.tarifPerKwh * kwhToday;
+                            return FutureBuilder(
+                                future: getSetting(),
+                                builder: (context, snapshot) {
+                                  if(snapshot.hasData){
+                                    Setting dataSetting = snapshot.data;
 
-                                double lastData = budgetHarian - billingToday;
+                                    double budgetHarian =
+                                        dataSetting.budgetMax / 30;
+                                        // print("data budget: "+ dataSetting.budgetMax.toString());
+                                    // double
+                                    // print("object data");
+                                    // print(dataSetting.tarifPerKwh);
+                                    billingToday =
+                                        dataSetting.tarifPerKwh * kwhToday/dataSetting.unit;
 
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      height: 120,
-                                      width: 150,
-                                      child: InkWell(
-                                        onTap: () {
-                                          print("object");
-                                        },
-                                        child: Card(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text("Save",
-                                                  style: GoogleFonts.poppins(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          255, 68, 204, 112),
-                                                      fontSize: ScreenUtil()
-                                                          .setSp(AllString()
-                                                                  .footer[
-                                                              "size"]))),
-                                              Row(
+                                    double lastData = budgetHarian - billingToday;
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          height: 120,
+                                          width: 150,
+                                          child: InkWell(
+                                            onTap: () {
+                                              print("object");
+                                            },
+                                            child: Card(
+                                              child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: ScreenUtil()
-                                                              .setHeight(20),
-                                                          right: ScreenUtil()
-                                                              .setWidth(10)),
-                                                      child: Text("Rp",
-                                                          style: GoogleFonts.poppins(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      68,
-                                                                      204,
-                                                                      112),
-                                                              fontSize:
-                                                                  ScreenUtil()
-                                                                      .setSp(
-                                                                          30)))),
-                                                  Text(
-                                                      lastData
-                                                          .toStringAsFixed(0),
+                                                  Text("Save",
                                                       style: GoogleFonts.poppins(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Color.fromARGB(
-                                                              255,
-                                                              68,
-                                                              204,
-                                                              112),
+                                                              255, 68, 204, 112),
                                                           fontSize: ScreenUtil()
                                                               .setSp(AllString()
                                                                       .footer[
                                                                   "size"]))),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                    children: [
+                                                      Padding(
+                                                          padding: EdgeInsets.only(
+                                                              bottom: ScreenUtil()
+                                                                  .setHeight(20),
+                                                              right: ScreenUtil()
+                                                                  .setWidth(10)),
+                                                          child: Text("Rp",
+                                                              style: GoogleFonts.poppins(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          68,
+                                                                          204,
+                                                                          112),
+                                                                  fontSize:
+                                                                      ScreenUtil()
+                                                                          .setSp(
+                                                                              30)))),
+                                                      Text(
+                                                          lastData
+                                                              .toStringAsFixed(0),
+                                                          style: GoogleFonts.poppins(
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              color: Color.fromARGB(
+                                                                  255,
+                                                                  68,
+                                                                  204,
+                                                                  112),
+                                                              fontSize: ScreenUtil()
+                                                                  .setSp(AllString()
+                                                                          .footer[
+                                                                      "size"]))),
+                                                    ],
+                                                  ),
+                                                  // Text("than Yesterday",
+                                                  //     style: GoogleFonts.poppins(
+                                                  //         color:
+                                                  //             Color.fromARGB(255, 68, 204, 112),
+                                                  //         fontSize: ScreenUtil().setSp(30))),
                                                 ],
                                               ),
-                                              // Text("than Yesterday",
-                                              //     style: GoogleFonts.poppins(
-                                              //         color:
-                                              //             Color.fromARGB(255, 68, 204, 112),
-                                              //         fontSize: ScreenUtil().setSp(30))),
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                );
-                              });
-                        }),
+                                        )
+                                      ],
+                                    );
+                                
+                                  }else{
+                                    return Center(child: Text("Loading..."));
+                                  }
+                                }
+                              );
+                        
+                          }else{
+
+                            return Center(child: Text("Loading..."));
+                        
+                          }
+                          // print("data thinks : " + snapshot.data);
+                         
+                        }
+                        
+                        ),
                   ),
                 ],
               ),
+              
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
